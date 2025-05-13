@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora con Patrones de Comportamiento</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora</h1>
+    <input type="number" id="numero1" placeholder="Número 1">
+    <input type="number" id="numero2" placeholder="Número 2">
+    <div class="botones">
+      <button onclick="ejecutarComando('sumar')">Sumar</button>
+      <button onclick="ejecutarComando('restar')">Restar</button>
+      <button onclick="deshacer()">borrar</button>
+    </div>
+    <h2 id="resultado">Resultado: 0</h2>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

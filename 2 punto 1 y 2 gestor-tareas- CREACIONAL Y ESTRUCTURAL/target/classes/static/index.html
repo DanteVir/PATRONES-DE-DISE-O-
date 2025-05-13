@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Tareas</title>
+    <style>
+    </style>
+</head>
+<body>
+
+<h1>Gestor de Tareas</h1>
+<form id="formulario-tarea">
+    <input type="text" id="descripcion" placeholder="Descripción de la tarea" required>
+    <button type="submit">Agregar Tarea</button>
+</form>
+<ul id="lista-tareas">
+</ul>
+
+<script>
+    const API_URL = '/tareas';
+
+    async function cargarTareas() {
+        const respuesta = await fetch(API_URL);
+        const tareas = await respuesta.json();
+        
+        const lista = document.getElementById('lista-tareas');
+        lista.innerHTML = '';
+
+        tareas.forEach(tarea => {
+            const item = document.createElement('li');
+            item.innerHTML = `
+                ${tarea.descripcion} - ${tarea.completada ? '✅ Completada' : '❌ Pendiente'}
+                <button onclick="borrarTarea(${tarea.id})">Eliminar</button>
+                <button onclick="completarTarea(${tarea.id})">Marcar Completada</button>
+            `;
+            lista.appendChild(item);
+        });
+    }
+
+    async function agregarTarea(e) {
+        e.preventDefault();
+        const descripcion = document.getElementById('descripcion').value;
+
+        await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ descripcion: descripcion, completada: false })
+        });
+
+        document.getElementById('descripcion').value = '';
+        cargarTareas();
+    }
+    async function borrarTarea(id) {
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        cargarTareas();
+    }
+    async function completarTarea(id) {
+        await fetch(`${API_URL}/${id}/completar`, { method: 'PUT' });
+        cargarTareas();
+    }
+
+    // Agregar un "event listener" para cuando el formulario sea enviado
+    document.getElementById('formulario-tarea').addEventListener('submit', agregarTarea);
+
+    // Cargar las tareas cuando se abra la página
+    cargarTareas();
+</script>
+
+</body>
+</html>
